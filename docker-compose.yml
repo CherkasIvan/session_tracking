@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  main:
+    container_name: main
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+    command: npm run start
+    env_file:
+      - .env
+    depends_on:
+      - administration-clients
+  administration-clients:
+    image: "postgres:18-alpine"
+    restart: always
+    container_name: session-tracking-postgres-db
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=session-tracking-db
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+      - ./create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    ports:
+      - "5432:5432"
+
+      

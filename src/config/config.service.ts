@@ -5,6 +5,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-snake-naming-strategy';
 
 import * as dotenv from 'dotenv';
+import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 
 dotenv.config();
 
@@ -37,7 +38,8 @@ class ConfigService {
       username: this.getValue('POSTGRES_USER'),
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DATABASE'),
-      entities: ['dist/**/*.entity.js'],
+      entities: [HotelRoomsEntity],
+      synchronize: true,
     };
   }
 }
