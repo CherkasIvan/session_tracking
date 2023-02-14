@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BookRoomDto } from 'src/controller/hotel-rooms/dto/book-room.dto';
 import { CreateRoomDto } from 'src/controller/hotel-rooms/dto/create-room.dto';
 import { IBookingDates } from 'src/interface/booking-dates.interface';
 import { IHotelRoom } from 'src/interface/hotel-room.interface';
@@ -40,13 +41,58 @@ export class RoomsService {
     return allRooms;
   }
 
-  async getAllAvailable(): Promise<HotelRoomsEntity[]> {
+  async getAvailable(roomNumber: number, searchDates: string): Promise<any[]> {
     const allRooms = await this.getAllRooms();
     allRooms.forEach((el) => {
       el.bookingDates = el.bookingDates.filter((el) => el.availability);
     });
-    return allRooms;
+
+    if (searchDates) {
+      allRooms.forEach((room) =>
+        room.bookingDates.filter((booked) => {
+          booked.bookedDay == searchDates;
+          console.log(booked);
+        }),
+      );
+      console.log(allRooms);
+      return allRooms;
+    }
+
+    if (roomNumber) {
+      const roomsByNumbers = allRooms.find((room) => {
+        if (room.room_number == roomNumber) {
+          console.log(room);
+          return room;
+        }
+      });
+      return roomsByNumbers;
+    }
+
+    if (!roomNumber || !searchDates) {
+      return allRooms;
+    }
   }
+
+  async bookingRoom(bookRoomDto: BookRoomDto): Promise<HotelRoomsEntity> {
+    // const allAvailableRooms = await this.getAvailable();
+    // const availableRoomNumber = allAvailableRooms.find((roomNum) => {
+    //   if (roomNum.room_number == bookRoomDto.roomNumber) {
+    //     const bookingDate = roomNum.bookingDates.forEach((date) => {
+    //       if (date.bookingDates == bookRoomDto.searchDates) {
+    //         return date;
+    //       }
+    //     });
+    //     return [roomNum, bookingDate];
+    //   }
+    // });
+
+    // console.log(availableRoomNumber);
+    return null;
+  }
+
+  /*
+Function for creating random availability of numbers in a hotel and getDate from present
+ */
 
   public dayAvailabilityOfRoom(daysNumber: number): IBookingDates[] {
     const datesRange: IBookingDates[] = [];

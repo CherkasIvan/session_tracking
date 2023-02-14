@@ -1,10 +1,4 @@
-import { ApiOperation } from '@nestjs/swagger';
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
 
