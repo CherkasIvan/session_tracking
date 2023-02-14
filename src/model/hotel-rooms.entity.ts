@@ -17,11 +17,10 @@ export class HotelRoomsEntity extends BaseEntity {
    * Get client by id
    * @param room_id Room id string
    */
-  //   @ApiOperation({ summary: 'Get Rooms' })
 
   @Column()
   room_number!: number;
 
-  @Column({ type: 'date', nullable: true })
-  bookingDate: string;
+  @Column()
+  bookingDates: string;
 }
