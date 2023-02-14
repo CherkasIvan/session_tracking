@@ -10,4 +10,12 @@ export class CreateRoomDto {
   @IsNumber()
   @IsPositive()
   roomNumber: number;
+
+  @ApiProperty({
+    description: 'Count of search days',
+    example: 10,
+  })
+  @IsNumber()
+  @IsPositive()
+  searchDates: number;
 }
