@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateRoomDto } from 'src/controller/hotel-rooms/dto/create-room.dto';
+import { CreateRoomDto } from 'src/controller/create-rooms/dto/create-room.dto';
 import { IBookingDates } from 'src/interface/booking-dates.interface';
 import { IHotelRoom } from 'src/interface/hotel-room.interface';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class RoomsService {
+export class CreateRoomsService {
   constructor(
     @InjectRepository(HotelRoomsEntity)
-    private readonly roomsRepository: Repository<HotelRoomsEntity>,
+    private readonly hotelRoomsRepository: Repository<HotelRoomsEntity>,
   ) {}
 
   async createDefaultRooms(
     createRoomDto: CreateRoomDto,
   ): Promise<HotelRoomsEntity[]> {
-    await this.roomsRepository.clear();
+    await this.hotelRoomsRepository.clear();
     const rooms: IHotelRoom[] = [];
     const roomsNumber = createRoomDto.roomNumber;
     for (let i = 1; i <= roomsNumber; i++) {
@@ -27,26 +27,14 @@ export class RoomsService {
         ),
       };
       rooms.push(room);
-      await this.roomsRepository.save(room);
+      await this.hotelRoomsRepository.save(room);
     }
     return rooms;
   }
 
-  async getAllRooms(): Promise<any[]> {
-    const allRooms = await this.roomsRepository.find();
-    allRooms.forEach((el) => {
-      el.bookingDates = JSON.parse(el.bookingDates);
-    });
-    return allRooms;
-  }
-
-  async getAllAvailable(): Promise<HotelRoomsEntity[]> {
-    const allRooms = await this.getAllRooms();
-    allRooms.forEach((el) => {
-      el.bookingDates = el.bookingDates.filter((el) => el.availability);
-    });
-    return allRooms;
-  }
+  /*
+Function for creating random availability of numbers in a hotel and getDate from present
+ */
 
   public dayAvailabilityOfRoom(daysNumber: number): IBookingDates[] {
     const datesRange: IBookingDates[] = [];

@@ -16,7 +16,7 @@ services:
     depends_on:
       - administration-clients
   administration-clients:
-    image: "postgres:18-alpine"
+    image: "postgres:13-alpine"
     restart: always
     container_name: session-tracking-postgres-db
     environment:

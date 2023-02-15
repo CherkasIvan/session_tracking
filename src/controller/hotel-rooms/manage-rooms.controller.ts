@@ -3,38 +3,40 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
-import { RoomsService } from 'src/service/rooms/rooms.service';
-import { CreateRoomDto } from './dto/create-room.dto';
+import { ManageRoomsService } from 'src/service/manage-rooms/manage-rooms.service';
+import { BookRoomDto } from './dto/book-room.dto';
 
-@ApiTags('Hotel-rooms')
+@ApiTags('Manage hotel rooms')
 @Controller('hotel-rooms')
-export class HotelRoomsController {
-  constructor(private hotelRoomsService: RoomsService) {}
-
-  @Post('/create-rooms')
-  async createRooms(
-    @Body() createRoomDto: CreateRoomDto,
-  ): Promise<HotelRoomsEntity[]> {
-    // const room = await this.hotelRoomsService.getRoom(createRoomDto.roomNumber);
-    // if (room !== null) {
-    //   throw new BadRequestException('This room is already created');
-    // }
-    return this.hotelRoomsService.createDefaultRooms(createRoomDto);
-  }
+export class ManageRoomsController {
+  constructor(private manageRoomsService: ManageRoomsService) {}
 
   @Get()
   getAllRooms(): Promise<HotelRoomsEntity[]> {
-    return this.hotelRoomsService.getAllRooms();
+    return this.manageRoomsService.getAllRooms();
   }
 
   @Get('/available')
-  getAllAvailable(): Promise<HotelRoomsEntity[]> {
-    return this.hotelRoomsService.getAllAvailable();
+  @ApiQuery({ name: 'roomNumber', required: false })
+  @ApiQuery({ name: 'searchDates', required: false })
+  getAvailable(
+    @Query('roomNumber') roomNumber?: number,
+    @Query('searchDates') searchDates?: string,
+  ): Promise<HotelRoomsEntity[]> {
+    return this.manageRoomsService.getAvailable(roomNumber, searchDates);
+  }
+
+  @Patch('/book-room')
+  async bookingRoom(
+    @Body() bookRoomDto: BookRoomDto,
+  ): Promise<HotelRoomsEntity> {
+    return this.manageRoomsService.bookingRoom(bookRoomDto);
   }
 
   // @Post()
