@@ -58,7 +58,6 @@ export class ManageRoomsService {
     getByRoomNumber.forEach((el) => {
       el.bookingDates = JSON.parse(el.bookingDates);
     });
-    console.log(getByRoomNumber);
 
     let bookedRoom!: IHotelRoom;
     allAvailableRooms.find((roomNumber) => {

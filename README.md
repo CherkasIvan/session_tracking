@@ -1,11 +1,6 @@
 ## Description
 
-Mini application for managing bank accounts, the ability to create them, replenish accounts and change statuses. The
-logic of this application imposes some restrictions. For example, if the account has an inactive status, the user will
-not be able to change the balance. If the limit is exceeded `dailyWithdrawalLimit`, the user will not be able to
-withdraw money
-
-###### This app has simple auth. Clients cannot see info about different clients
+Mini application for managing hotels numbers, the ability to create them.
 
 ## Preparing
 
@@ -13,15 +8,12 @@ The .env file contains all the necessary variables for correct operation. Here i
 
 | Name              | Description                               | Default value                   |
 |-------------------|-------------------------------------------|---------------------------------|
-| POSTGRES_HOST     | postgres host                             |administration-clients-postgres-d|
+| POSTGRES_HOST     | postgres host                             | localhost                       |
 | POSTGRES_PORT     | postgres port                             | 3000                            |
 | POSTGRES_USER     | postgres user                             | postgres                        |
 | POSTGRES_PASSWORD | postgres password                         | postgres                        |
 | POSTGRES_DATABASE | name of database                          | administration-clients-db       |
 | PORT              | port of the app                           | 3000                            |
-| LIMIT_GET_BALANCE | the amount of money a user can withdraw per day | 4                         |
-| JWT_SECRET_KEY    | jwt secret key                            | secret                          |
-| JWT_EXPIRE        | time of living jwt token                  | 60                              |
 
 ## Installation
 
