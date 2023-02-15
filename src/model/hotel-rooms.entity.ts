@@ -8,7 +8,7 @@ import { BaseEntity } from './base.entity';
 @Entity({ name: 'hotel-rooms' })
 export class HotelRoomsEntity extends BaseEntity {
   /**
-   * Get client by id
+   * Get room by id
    * @param room_id Room id string
    */
 

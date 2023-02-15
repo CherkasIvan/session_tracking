@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import { SnakeNamingStrategy } from 'typeorm-snake-naming-strategy';
-
 import * as dotenv from 'dotenv';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 

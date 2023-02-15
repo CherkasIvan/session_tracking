@@ -9,25 +9,17 @@ import {
 } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
-import { RoomsService } from 'src/service/rooms/rooms.service';
+import { ManageRoomsService } from 'src/service/manage-rooms/manage-rooms.service';
 import { BookRoomDto } from './dto/book-room.dto';
-import { CreateRoomDto } from './dto/create-room.dto';
 
-@ApiTags('Hotel-rooms')
+@ApiTags('Manage hotel rooms')
 @Controller('hotel-rooms')
-export class HotelRoomsController {
-  constructor(private hotelRoomsService: RoomsService) {}
-
-  @Post('/create-rooms')
-  async createRooms(
-    @Body() createRoomDto: CreateRoomDto,
-  ): Promise<HotelRoomsEntity[]> {
-    return this.hotelRoomsService.createDefaultRooms(createRoomDto);
-  }
+export class ManageRoomsController {
+  constructor(private manageRoomsService: ManageRoomsService) {}
 
   @Get()
   getAllRooms(): Promise<HotelRoomsEntity[]> {
-    return this.hotelRoomsService.getAllRooms();
+    return this.manageRoomsService.getAllRooms();
   }
 
   @Get('/available')
@@ -37,14 +29,14 @@ export class HotelRoomsController {
     @Query('roomNumber') roomNumber?: number,
     @Query('searchDates') searchDates?: string,
   ): Promise<HotelRoomsEntity[]> {
-    return this.hotelRoomsService.getAvailable(roomNumber, searchDates);
+    return this.manageRoomsService.getAvailable(roomNumber, searchDates);
   }
 
   @Patch('/book-room')
   async bookingRoom(
     @Body() bookRoomDto: BookRoomDto,
   ): Promise<HotelRoomsEntity> {
-    return this.hotelRoomsService.bookingRoom(bookRoomDto);
+    return this.manageRoomsService.bookingRoom(bookRoomDto);
   }
 
   // @Post()

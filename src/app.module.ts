@@ -3,12 +3,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { configService } from './config/config.service';
-import { HotelRoomsControllerModule } from './controller/hotel-rooms/hotel-rooms-controller.module';
+import { CreateRoomsModule } from './controller/create-rooms/create-rooms.module';
+import { ManageRoomsControllerModule } from './controller/hotel-rooms/manage-rooms-controller.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
-    HotelRoomsControllerModule,
+    ManageRoomsControllerModule,
+    CreateRoomsModule,
   ],
   controllers: [],
   providers: [],
