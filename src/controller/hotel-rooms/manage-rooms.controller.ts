@@ -36,6 +36,10 @@ export class ManageRoomsController {
   async bookingRoom(
     @Body() bookRoomDto: BookRoomDto,
   ): Promise<HotelRoomsEntity> {
+    // const room = await this.manageRoomsService.getRoom(createRoomDto.roomNumber);
+    // if (room !== null) {
+    //   throw new BadRequestException('This room is already created');
+    // }
     return this.manageRoomsService.bookingRoom(bookRoomDto);
   }
 

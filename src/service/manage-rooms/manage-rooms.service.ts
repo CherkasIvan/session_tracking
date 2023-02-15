@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookRoomDto } from 'src/controller/hotel-rooms/dto/book-room.dto';
+import { IHotelRoom } from 'src/interface/hotel-room.interface';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 import { Repository } from 'typeorm';
 
@@ -8,7 +9,7 @@ import { Repository } from 'typeorm';
 export class ManageRoomsService {
   constructor(
     @InjectRepository(HotelRoomsEntity)
-    private readonly roomsRepository: Repository<HotelRoomsEntity>,
+    private readonly roomsRepository: Repository<any>,
   ) {}
 
   async getAllRooms(): Promise<any[]> {
@@ -19,7 +20,7 @@ export class ManageRoomsService {
     return allRooms;
   }
 
-  async getAvailable(roomNumber: number, searchDates: string): Promise<any> {
+  async getAvailable(roomNumber?: number, searchDates?: string): Promise<any> {
     const allRooms = await this.getAllRooms();
     allRooms.forEach((el) => {
       el.bookingDates = el.bookingDates.filter((el) => el.availability);
@@ -34,39 +35,44 @@ export class ManageRoomsService {
           }
         });
       });
-      console.log(availableByDate);
       return availableByDate;
     }
 
     if (roomNumber) {
       const roomsByNumbers = allRooms.find((room) => {
         if (room.room_number == roomNumber) {
-          console.log(room);
           return room;
         }
       });
       return roomsByNumbers;
-    }
-
-    if (!roomNumber || !searchDates) {
+    } else {
       return allRooms;
     }
   }
 
-  async bookingRoom(bookRoomDto: BookRoomDto): Promise<any> {
-    // const allAvailableRooms = await this.getAvailable();
-    // const availableRoomNumber = allAvailableRooms.find((roomNum) => {
-    //   if (roomNum.room_number == bookRoomDto.roomNumber) {
-    //     const bookingDate = roomNum.bookingDates.forEach((date) => {
-    //       if (date.bookingDates == bookRoomDto.searchDates) {
-    //         return date;
-    //       }
-    //     });
-    //     return [roomNum, bookingDate];
-    //   }
-    // });
+  async bookingRoom(bookRoomDto: BookRoomDto): Promise<HotelRoomsEntity> {
+    const allAvailableRooms = await this.getAvailable();
+    const getByRoomNumber = await this.roomsRepository.findBy({
+      room_number: bookRoomDto.roomNumber,
+    });
+    getByRoomNumber.forEach((el) => {
+      el.bookingDates = JSON.parse(el.bookingDates);
+    });
+    console.log(getByRoomNumber);
 
-    // console.log(availableRoomNumber);
-    return null;
+    let bookedRoom!: IHotelRoom;
+    allAvailableRooms.find((roomNumber) => {
+      if (roomNumber.room_number === bookRoomDto.roomNumber) {
+        roomNumber.bookingDates.filter((booked) => {
+          if (booked.bookedDay === bookRoomDto.searchDates) {
+            booked.availability = false;
+            bookedRoom = roomNumber;
+            return bookedRoom;
+          }
+        });
+      }
+      return bookedRoom;
+    });
+    return bookedRoom;
   }
 }

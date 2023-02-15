@@ -18,9 +18,8 @@ export class CreateRoomsService {
   ): Promise<HotelRoomsEntity[]> {
     await this.hotelRoomsRepository.clear();
     const rooms: IHotelRoom[] = [];
-    const roomsNumber = createRoomDto.roomNumber;
-    for (let i = 1; i <= roomsNumber; i++) {
-      const room = {
+    for (let i = 1; i <= createRoomDto.roomNumber; i++) {
+      const room: IHotelRoom = {
         room_number: i,
         bookingDates: JSON.stringify(
           this.dayAvailabilityOfRoom(createRoomDto.searchDates),
@@ -38,12 +37,14 @@ Function for creating random availability of numbers in a hotel and getDate from
 
   public dayAvailabilityOfRoom(daysNumber: number): IBookingDates[] {
     const datesRange: IBookingDates[] = [];
-    const startDate = new Date();
+    const startDate: Date = new Date();
     for (let i = 0; i < daysNumber; i++) {
-      const bookedDay = new Date(startDate.setDate(startDate.getDate() + 1))
+      const bookedDay: string = new Date(
+        startDate.setDate(startDate.getDate() + 1),
+      )
         .toISOString()
         .split('T')[0];
-      const availability = Math.random() < 0.5;
+      const availability: boolean = Math.random() < 0.5;
       datesRange.push({ bookedDay, availability });
     }
     return datesRange;
