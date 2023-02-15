@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 import { ManageRoomsService } from 'src/service/manage-rooms/manage-rooms.service';
@@ -36,35 +28,6 @@ export class ManageRoomsController {
   async bookingRoom(
     @Body() bookRoomDto: BookRoomDto,
   ): Promise<HotelRoomsEntity> {
-    // const room = await this.manageRoomsService.getRoom(createRoomDto.roomNumber);
-    // if (room !== null) {
-    //   throw new BadRequestException('This room is already created');
-    // }
     return this.manageRoomsService.bookingRoom(bookRoomDto);
   }
-
-  // @Post()
-  // async createRoom(
-  //   @Body() createRoomDto: CreateRoomDto,
-  // ): Promise<HotelRoomsEntity> {
-  //   const room = await this.hotelRoomsService.getRoom(createRoomDto.roomNumber);
-  //   if (room !== null) {
-  //     throw new BadRequestException('This room is already created');
-  //   }
-  //   return this.hotelRoomsService.createRoom(createRoomDto);
-  // }
-
-  // @Get('/room')
-  // async getRoom(
-  //   @Query('room_number') room_number: number,
-  // ): Promise<HotelRoomsEntity> {
-  //   return this.hotelRoomsService.getRoom(room_number);
-  // }
-
-  // @Get('/init-all-rooms')
-  // async getAllRooms(
-  //   @Query('room_number') room_number: number,
-  // ): Promise<HotelRoomsEntity> {
-  //   return this.hotelRoomsService.getRoom(room_number);
-  // }
 }
