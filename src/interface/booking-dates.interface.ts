@@ -1,4 +1,5 @@
 export interface IBookingDates {
-  bookedDay: string;
-  availability: boolean;
+  roomNumber: number;
+  arrivalDate: string;
+  departureDate: string;
 }
