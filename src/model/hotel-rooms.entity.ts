@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
+import { ReservedDatesEntity } from './reserved-dates.entity';
 
 /**
  * Account Entity
@@ -13,8 +14,11 @@ export class HotelRoomsEntity extends BaseEntity {
    */
 
   @Column()
-  room_number!: number;
+  roomsNumber!: number;
 
-  @Column()
-  bookingDates: string;
+  @OneToMany(
+    (type) => ReservedDatesEntity,
+    (reservation) => reservation.roomsNumber,
+  )
+  reservations?: ReservedDatesEntity;
 }

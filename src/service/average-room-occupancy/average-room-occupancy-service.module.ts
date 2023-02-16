@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 import { ReservedDatesEntity } from 'src/model/reserved-dates.entity';
-import { ManageRoomsService } from './manage-rooms.service';
+import { AverageRoomOccupancyService } from './average-room-occupancy.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([HotelRoomsEntity, ReservedDatesEntity])],
-  providers: [ManageRoomsService],
-  exports: [ManageRoomsService],
+  providers: [AverageRoomOccupancyService],
+  exports: [AverageRoomOccupancyService],
 })
-export class ManageRoomsServiceModule {}
+export class AverageRoomOccupancyServiceModule {}

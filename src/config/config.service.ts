@@ -4,6 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import * as dotenv from 'dotenv';
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
+import { ReservedDatesEntity } from 'src/model/reserved-dates.entity';
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ class ConfigService {
       username: this.getValue('POSTGRES_USER'),
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DATABASE'),
-      entities: [HotelRoomsEntity],
+      entities: [HotelRoomsEntity, ReservedDatesEntity],
       synchronize: true,
     };
   }
