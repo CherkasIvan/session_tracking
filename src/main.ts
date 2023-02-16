@@ -24,6 +24,6 @@ async function bootstrap() {
     origin: whiteList,
   });
 
-  await await app.listen(configService.getPort());
+  await app.listen(configService.getPort());
 }
 bootstrap();
