@@ -14,7 +14,6 @@ import { AvailableDatesType } from 'src/interface/available-dates.type';
 export class ManageRoomsController {
   constructor(private manageRoomsService: ManageRoomsService) {}
 
-  @ApiQuery({ name: 'Create default rooms' })
   @Post('/create-rooms')
   async createDefaultRooms(
     @Body() createRoomDto: CreateRoomDto,
@@ -25,11 +24,10 @@ export class ManageRoomsController {
   @Post('/reserve-room')
   async reserveRoom(
     @Body() reserveRoom: ReserveRoomDto,
-  ): Promise<AvailableDatesType[]> {
+  ): Promise<AvailableDatesType> {
     return this.manageRoomsService.reserveRoom(reserveRoom);
   }
 
-  @ApiQuery({ name: 'Find all rooms' })
   @Get('/find-all-rooms')
   findAllRooms(): Promise<HotelRoomType[]> {
     return this.manageRoomsService.findAllRooms();

@@ -6,7 +6,9 @@ import { Repository } from 'typeorm';
 import { ReservedDatesEntity } from 'src/model/reserved-dates.entity';
 import { AvailableDatesType } from 'src/interface/available-dates.type';
 import { HotelRoomType } from 'src/interface/hotel-room.type';
+import { CreateDatesDto } from 'src/controller/hotel-rooms/dto/create-dates.dto';
 import { ReserveRoomDto } from 'src/controller/hotel-rooms/dto/reserve-room.dto';
+import { IBookingDates } from 'src/interface/booking-dates.interface';
 
 @Injectable()
 export class ManageRoomsService {
@@ -22,37 +24,46 @@ export class ManageRoomsService {
     createRoomDto: CreateRoomDto,
   ): Promise<HotelRoomType[]> {
     await this.hotelRoomsRepository.delete({});
+    // await this.reservedDatesRepository.delete({});
     const rooms: HotelRoomType[] = [];
+    // const date: AvailableDatesType[] = [];
     for (let i = 1; i <= createRoomDto.roomsNumber; i++) {
       const room: HotelRoomType = {
         roomsNumber: i,
       };
       rooms.push(room);
-      await this.hotelRoomsRepository.save(room);
+      // date.push({
+      //   arrivalDate: createRoomDto.arrivalDate,
+      //   departureDate: createRoomDto.departureDate,
+      //   room,
+      // });
+      // await this.reservedDatesRepository.save(date);
     }
+    await this.hotelRoomsRepository.save(rooms);
+
     return rooms;
   }
 
-  async reserveRoom(
-    reserveRoomDto: ReserveRoomDto,
-  ): Promise<AvailableDatesType[]> {
-    const date: AvailableDatesType[] = [];
-    const getByRoomNumber = await this.hotelRoomsRepository.findBy({
-      roomsNumber: reserveRoomDto.roomsNumber,
+  async reserveRoom(reserveRoom: ReserveRoomDto): Promise<AvailableDatesType> {
+    const room = await this.hotelRoomsRepository.findOne({
+      where: { roomsNumber: reserveRoom.roomsNumber },
     });
-
-    date.push({
-      arrivalDate: reserveRoomDto.arrivalDate,
-      departureDate: reserveRoomDto.departureDate,
-      roomsNumber,
-    });
+    let date = {
+      arrivalDate: reserveRoom.arrivalDate,
+      departureDate: reserveRoom.departureDate,
+      room,
+    };
     console.log(date);
-    // await this.reservedDatesRepository.save(date);
+    date = await this.reservedDatesRepository.save(date);
     return date;
   }
 
   async findAllRooms(): Promise<HotelRoomType[]> {
     const allRooms = await this.hotelRoomsRepository.find();
+    // allRooms.forEach((el) => {
+    //   el.bookingDates = JSON.parse(el.bookingDates);
+    // });
+    console.log(allRooms);
     return allRooms;
   }
 
@@ -60,6 +71,7 @@ export class ManageRoomsService {
     const getByRoomNumber = await this.hotelRoomsRepository.findBy({
       roomsNumber: query.roomsNumber,
     });
+    console.log(getByRoomNumber);
     return getByRoomNumber;
   }
 
