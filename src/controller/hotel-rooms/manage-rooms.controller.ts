@@ -1,12 +1,9 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ManageRoomsService } from 'src/service/manage-rooms/manage-rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { ReserveRoomDto } from './dto/reserve-room.dto';
-import { CreateDatesDto } from './dto/create-dates.dto';
 import { HotelRoomType } from 'src/interface/hotel-room.type';
-import { IBookingDates } from 'src/interface/booking-dates.interface';
 import { AvailableDatesType } from 'src/interface/available-dates.type';
 
 @ApiTags('Manage hotel rooms')
@@ -33,11 +30,10 @@ export class ManageRoomsController {
     return this.manageRoomsService.findAllRooms();
   }
 
-  @ApiQuery({ name: 'Find dates of reservations rooms number' })
   @Get('/find-all-dates-of-room')
   findOneDateByRoomsNumber(
     @Query() query: CreateRoomDto,
-  ): Promise<HotelRoomType[]> {
+  ): Promise<AvailableDatesType[]> {
     return this.manageRoomsService.findOneDateByRoomsNumber(query);
   }
 
