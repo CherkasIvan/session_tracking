@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { AverageRoomOccupancyService } from './average-room-occupancy.service';
 
 describe('AverageRoomOccupancyService', () => {
@@ -9,7 +10,9 @@ describe('AverageRoomOccupancyService', () => {
       providers: [AverageRoomOccupancyService],
     }).compile();
 
-    service = module.get<AverageRoomOccupancyService>(AverageRoomOccupancyService);
+    service = module.get<AverageRoomOccupancyService>(
+      AverageRoomOccupancyService,
+    );
   });
 
   it('should be defined', () => {

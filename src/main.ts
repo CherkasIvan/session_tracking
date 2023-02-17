@@ -1,14 +1,16 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
-import { configService } from './config/config.service';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  const config = new DocumentBuilder()
+  const config = await app.get(ConfigService);
+  const port = config.get<number>('PORT');
+
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('Hotel booking rooms api. Test task')
     .setDescription('The hotel accounts API description')
     .setVersion('1.0')
@@ -16,7 +18,7 @@ async function bootstrap() {
     // .addBearerAuth()
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
   const whiteList = [];
@@ -24,6 +26,8 @@ async function bootstrap() {
     origin: whiteList,
   });
 
-  await app.listen(configService.getPort());
+  await app.listen(port, () => {
+    console.log(`App started om port ${port}`);
+  });
 }
 bootstrap();

@@ -6,7 +6,7 @@ import { ReservedDatesEntity } from './reserved-dates.entity';
 /**
  * Account Entity
  */
-@Entity({ name: 'hotel-rooms' })
+@Entity({ name: 'hotel_rooms' })
 export class HotelRoomsEntity extends BaseEntity {
   /**
    * Get room by id

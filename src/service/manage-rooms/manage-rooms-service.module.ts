@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
-import { ReservedDatesEntity } from 'src/model/reserved-dates.entity';
+
+import { HotelRoomsEntity } from '../../model/hotel-rooms.entity';
+import { ReservedDatesEntity } from '../../model/reserved-dates.entity';
+
 import { ManageRoomsService } from './manage-rooms.service';
 
 @Module({

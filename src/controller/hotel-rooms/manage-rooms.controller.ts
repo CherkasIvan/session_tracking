@@ -1,13 +1,24 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
-import { ManageRoomsService } from 'src/service/manage-rooms/manage-rooms.service';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+import { ManageRoomsService } from '../../service/manage-rooms/manage-rooms.service';
+
 import { CreateRoomDto } from './dto/create-room.dto';
 import { ReserveRoomDto } from './dto/reserve-room.dto';
-import { CreateDatesDto } from './dto/create-dates.dto';
-import { HotelRoomType } from 'src/interface/hotel-room.type';
-import { IBookingDates } from 'src/interface/booking-dates.interface';
-import { AvailableDatesType } from 'src/interface/available-dates.type';
+
+import { HotelRoomType } from '../../interface/hotel-room.type';
+import { AvailableDatesType } from '../../interface/available-dates.type';
+
+import * as moment from 'moment';
 
 @ApiTags('Manage hotel rooms')
 @Controller('hotel-rooms')
@@ -18,27 +29,64 @@ export class ManageRoomsController {
   async createDefaultRooms(
     @Body() createRoomDto: CreateRoomDto,
   ): Promise<HotelRoomType[]> {
-    return this.manageRoomsService.createDefaultRooms(createRoomDto);
+    if (typeof createRoomDto.roomsNumber === 'number') {
+      return this.manageRoomsService.createDefaultRooms(createRoomDto);
+    } else {
+      throw new BadRequestException(
+        'Your should write correct number of creating rooms',
+        {
+          cause: new Error(),
+          description: 'Invalid input format',
+        },
+      );
+    }
   }
 
   @Post('/reserve-room')
   async reserveRoom(
     @Body() reserveRoom: ReserveRoomDto,
   ): Promise<AvailableDatesType> {
-    return this.manageRoomsService.reserveRoom(reserveRoom);
+    const difference = moment(reserveRoom.departureDate).diff(
+      moment(reserveRoom.arrivalDate),
+      'days',
+    );
+
+    if (difference >= 0 && typeof reserveRoom.roomsNumber === 'number') {
+      return this.manageRoomsService.reserveRoom(reserveRoom);
+    } else {
+      throw new BadRequestException(
+        'Departure date cant be more then arrival date',
+        {
+          cause: new Error(),
+          description: 'Departure date is more then arrival date',
+        },
+      );
+    }
   }
 
   @Get('/find-all-rooms')
-  findAllRooms(): Promise<HotelRoomType[]> {
-    return this.manageRoomsService.findAllRooms();
+  async findAllRooms(): Promise<HotelRoomType[]> {
+    try {
+      return await this.manageRoomsService.findAllRooms();
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'No rooms created',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 
-  @ApiQuery({ name: 'Find dates of reservations rooms number' })
   @Get('/find-all-dates-of-room')
   findOneDateByRoomsNumber(
     @Query() query: CreateRoomDto,
-  ): Promise<HotelRoomType[]> {
-    return this.manageRoomsService.findOneDateByRoomsNumber(query);
+  ): Promise<AvailableDatesType[]> {
+    return this.manageRoomsService.findDatesForRoomsNumber(query);
   }
 
   // @Post('/create-dates')
