@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ManageRoomsServiceModule } from 'src/service/manage-rooms/manage-rooms-service.module';
+
+import { ManageRoomsServiceModule } from '../../service/manage-rooms/manage-rooms-service.module';
+
 import { ManageRoomsController } from './manage-rooms.controller';
 
 @Module({

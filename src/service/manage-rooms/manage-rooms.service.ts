@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateRoomDto } from 'src/controller/hotel-rooms/dto/create-room.dto';
-import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
+
 import { Repository } from 'typeorm';
-import { ReservedDatesEntity } from 'src/model/reserved-dates.entity';
-import { AvailableDatesType } from 'src/interface/available-dates.type';
-import { HotelRoomType } from 'src/interface/hotel-room.type';
-import { ReserveRoomDto } from 'src/controller/hotel-rooms/dto/reserve-room.dto';
+
+import { HotelRoomsEntity } from '../../model/hotel-rooms.entity';
+import { ReservedDatesEntity } from '../../model/reserved-dates.entity';
+
+import { CreateRoomDto } from '../../controller/hotel-rooms/dto/create-room.dto';
+import { ReserveRoomDto } from '../../controller/hotel-rooms/dto/reserve-room.dto';
+
+import { AvailableDatesType } from '../../interface/available-dates.type';
+import { HotelRoomType } from '../../interface/hotel-room.type';
 
 @Injectable()
 export class ManageRoomsService {
@@ -21,6 +25,7 @@ export class ManageRoomsService {
   async createDefaultRooms(
     createRoomDto: CreateRoomDto,
   ): Promise<HotelRoomType[]> {
+    await this.reservedDatesRepository.delete({});
     await this.hotelRoomsRepository.delete({});
     const rooms: HotelRoomType[] = [];
     for (let i = 1; i <= createRoomDto.roomsNumber; i++) {
@@ -43,28 +48,18 @@ export class ManageRoomsService {
       departureDate: reserveRoom.departureDate,
       room,
     };
-    const reservedRoom = await this.reservedDatesRepository.findOne({
-      where: {
-        arrivalDate: reserveRoom.arrivalDate,
-        departureDate: reserveRoom.departureDate,
-      },
-    });
-    console.log(reservedRoom);
-    // date = await this.reservedDatesRepository.save(date);
-    return date;
+    return await this.reservedDatesRepository.save(date);
   }
 
   async findAllRooms(): Promise<HotelRoomType[]> {
     const allRooms = await this.hotelRoomsRepository.find();
-    console.log(allRooms);
     return allRooms;
   }
 
-  async findOneDateByRoomsNumber(query): Promise<AvailableDatesType[]> {
+  async findDatesForRoomsNumber(query): Promise<AvailableDatesType[]> {
     const getByRoomNumber = await this.reservedDatesRepository.findBy({
-      id: query.id,
+      room: query.roomNumber,
     });
-    console.log(getByRoomNumber);
     return getByRoomNumber;
   }
 
