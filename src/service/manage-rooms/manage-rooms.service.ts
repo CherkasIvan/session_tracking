@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -11,6 +11,7 @@ import { ReserveRoomDto } from '../../controller/hotel-rooms/dto/reserve-room.dt
 
 import { AvailableDatesType } from '../../interface/available-dates.type';
 import { HotelRoomType } from '../../interface/hotel-room.type';
+import * as moment from 'moment';
 
 @Injectable()
 export class ManageRoomsService {
@@ -40,25 +41,70 @@ export class ManageRoomsService {
   }
 
   async reserveRoom(reserveRoom: ReserveRoomDto): Promise<AvailableDatesType> {
+    let canReserve = true;
     const room = await this.hotelRoomsRepository.findOne({
+      relations: { reservations: true },
       where: { roomsNumber: reserveRoom.roomsNumber },
     });
-    const date = {
+    const date = this.reservedDatesRepository.create({
       arrivalDate: reserveRoom.arrivalDate,
       departureDate: reserveRoom.departureDate,
       room,
-    };
-    return await this.reservedDatesRepository.save(date);
+    });
+    for (const reservation of room.reservations) {
+      if (
+        moment(reserveRoom.arrivalDate).isBetween(
+          reservation.arrivalDate,
+          reservation.departureDate,
+          'days',
+          '[]',
+        )
+      ) {
+        canReserve = false;
+        break;
+      }
+      if (
+        moment(reserveRoom.departureDate).isBetween(
+          reservation.arrivalDate,
+          reservation.departureDate,
+          'days',
+          '[]',
+        )
+      ) {
+        canReserve = false;
+        break;
+      }
+    }
+
+    if (canReserve) {
+      const reservedDates = await this.reservedDatesRepository.save(date);
+      return await this.reservedDatesRepository.findOne({
+        relations: { room: true },
+        where: { id: reservedDates.id },
+      });
+    } else {
+      throw new BadRequestException(
+        'You cant reserve room because it is already booked',
+        {
+          cause: new Error(),
+          description: 'You cant reserve room because it is already booked',
+        },
+      );
+    }
   }
 
   async findAllRooms(): Promise<HotelRoomType[]> {
-    const allRooms = await this.hotelRoomsRepository.find();
+    const allRooms = await this.hotelRoomsRepository.find({
+      relations: { reservations: true },
+    });
     return allRooms;
   }
 
   async findDatesForRoomsNumber(query): Promise<AvailableDatesType[]> {
-    const getByRoomNumber = await this.reservedDatesRepository.findBy({
-      room: query.roomNumber,
+    console.log(query);
+    const getByRoomNumber = await this.reservedDatesRepository.find({
+      relations: { room: true },
+      where: { room: { roomsNumber: query.roomsNumber } },
     });
     return getByRoomNumber;
   }
