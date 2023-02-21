@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Query,
 } from '@nestjs/common';
@@ -84,9 +85,9 @@ export class ManageRoomsController {
 
   @Get('/find-all-dates-of-room')
   findOneDateByRoomsNumber(
-    @Query() query: CreateRoomDto,
+    @Query() queryNumber: CreateRoomDto,
   ): Promise<AvailableDatesType[]> {
-    return this.manageRoomsService.findDatesForRoomsNumber(query);
+    return this.manageRoomsService.findDatesForRoomsNumber(queryNumber);
   }
 
   // @Post('/create-dates')
