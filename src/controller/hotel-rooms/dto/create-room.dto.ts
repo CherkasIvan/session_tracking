@@ -1,13 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IsNumber, IsPositive } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 export class CreateRoomDto {
+  @IsNumber()
+  @IsNotEmpty({ message: 'Value cannot be empty' })
+  @IsPositive({ message: 'Value must be positive' })
   @ApiProperty({
     description: 'Room number',
     example: 1,
   })
-  @IsNumber()
-  @IsPositive()
-  roomsNumber: number;
+  roomNumber: number;
 }

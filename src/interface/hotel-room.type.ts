@@ -1,3 +1,3 @@
 export type HotelRoomType = {
-  roomsNumber: number;
+  roomNumber: number;
 };
