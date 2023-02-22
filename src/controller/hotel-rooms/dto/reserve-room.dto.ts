@@ -1,28 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IsNumber, IsPositive, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  MinDate,
+} from 'class-validator';
 
 export class ReserveRoomDto {
+  @IsNumber()
+  @IsNotEmpty({ message: 'Value cannot be empty' })
+  @IsPositive({ message: 'Value must be positive' })
   @ApiProperty({
-    required: false,
     description: 'Room number that should be booked',
     example: 1,
   })
-  @IsNumber()
-  @IsPositive()
   roomNumber: number;
 
+  @IsDateString()
+  @IsNotEmpty({ message: 'Value cannot be empty' })
+  // @MinDate(new Date())
   @ApiProperty({
     description: 'Booked start period',
     example: '2023-02-20',
   })
-  @IsString()
-  arrivalDate: string;
+  arrivalDate: Date;
 
+  @IsDateString()
+  @IsNotEmpty({ message: 'Value cannot be empty' })
+  // @MinDate(new Date())
   @ApiProperty({
     description: 'Booked end period',
     example: '2023-02-21',
   })
-  @IsString()
-  departureDate: string;
+  departureDate: Date;
 }

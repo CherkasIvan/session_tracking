@@ -14,10 +14,10 @@ export class ReservedDatesEntity extends BaseEntity {
    */
 
   @Column()
-  arrivalDate: string;
+  arrivalDate: Date;
 
   @Column()
-  departureDate: string;
+  departureDate: Date;
 
   @ManyToOne((type) => HotelRoomsEntity, (room) => room.reservations)
   room: HotelRoomsEntity;

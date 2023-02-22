@@ -4,8 +4,8 @@ import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 export class CreateRoomDto {
   @IsNumber()
-  @IsNotEmpty()
-  @IsPositive()
+  @IsNotEmpty({ message: 'Value cannot be empty' })
+  @IsPositive({ message: 'Value must be positive' })
   @ApiProperty({
     description: 'Room number',
     example: 1,

@@ -20,6 +20,8 @@ import { HotelRoomType } from '../../interface/hotel-room.type';
 import { AvailableDatesType } from '../../interface/available-dates.type';
 
 import * as moment from 'moment';
+import { CreateDatesDto } from './dto/create-dates.dto';
+import { QueryDto } from './dto/query.dto';
 
 @ApiTags('Manage hotel rooms')
 @Controller('hotel-rooms')
@@ -42,7 +44,7 @@ export class ManageRoomsController {
       'days',
     );
 
-    if (difference >= 0 && typeof reserveRoom.roomNumber === 'number') {
+    if (difference >= 0) {
       return this.manageRoomsService.reserveRoom(reserveRoom);
     } else {
       throw new BadRequestException(
@@ -57,39 +59,24 @@ export class ManageRoomsController {
 
   @Get('/find-all-rooms')
   async findAllRooms(): Promise<HotelRoomType[]> {
-    try {
-      return await this.manageRoomsService.findAllRooms();
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'No rooms created',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
+    return await this.manageRoomsService.findAllRooms();
   }
 
-  @Get('/find-all-dates-of-room')
+  @Get('/find-all-dates-of-room/:roomNumber')
   findOneDateByRoomsNumber(
-    @Query() queryNumber: CreateRoomDto,
+    @Param() queryNumber: QueryDto,
   ): Promise<AvailableDatesType[]> {
     return this.manageRoomsService.findDatesForRoomsNumber(queryNumber);
   }
 
-  // @Post('/create-dates')
-  // async createDefaultDates(
-  //   @Body() createDatesDto: CreateDatesDto,
-  // ): Promise<any> {
-  //   return this.manageRoomsService.createDefaultDates(createDatesDto);
-  // }
-
-  /* Endpoint for creating rooms with different numbers */
-
   // /* Get all hotel rooms */
+
+  @Get('/all-available')
+  async findAllAvailableRooms(
+    @Query() queryDate: CreateDatesDto,
+  ): Promise<CreateRoomDto[]> {
+    return await this.manageRoomsService.findAllAvailableRooms(queryDate);
+  }
 
   // @Get('/all-available')
   // // @ApiQuery({ name: 'roomNumber', required: false })
@@ -101,11 +88,4 @@ export class ManageRoomsController {
   // }
 
   // /* Get all available hotel rooms */
-
-  // // @Patch('/book-room')
-  // // async bookingRoom(
-  // //   @Body() bookRoomDto: BookRoomDto,
-  // // ): Promise<HotelRoomsEntity> {
-  // //   return this.manageRoomsService.bookingRoom(bookRoomDto);
-  // // }
 }

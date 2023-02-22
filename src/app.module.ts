@@ -21,7 +21,6 @@ import { ReservedDatesEntity } from './model/reserved-dates.entity';
         database: config.get<string>('POSTGRES_DATABASE'),
         port: config.get<number>('POSTGRES_PORT'),
         entities: [HotelRoomsEntity, ReservedDatesEntity],
-        synchronize: true,
         autoLoadEntities: true,
         logging: true,
       }),
