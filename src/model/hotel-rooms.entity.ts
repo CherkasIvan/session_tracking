@@ -14,7 +14,7 @@ export class HotelRoomsEntity extends BaseEntity {
    */
 
   @Column({ unique: true })
-  roomsNumber!: number;
+  roomNumber!: number;
 
   @OneToMany((type) => ReservedDatesEntity, (reservation) => reservation.room)
   reservations?: ReservedDatesEntity[];

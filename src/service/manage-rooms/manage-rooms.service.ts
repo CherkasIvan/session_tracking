@@ -29,9 +29,9 @@ export class ManageRoomsService {
     await this.reservedDatesRepository.delete({});
     await this.hotelRoomsRepository.delete({});
     const rooms: HotelRoomType[] = [];
-    for (let i = 1; i <= createRoomDto.roomsNumber; i++) {
+    for (let i = 1; i <= createRoomDto.roomNumber; i++) {
       const room: HotelRoomType = {
-        roomsNumber: i,
+        roomNumber: i,
       };
       rooms.push(room);
     }
@@ -44,7 +44,7 @@ export class ManageRoomsService {
     let canReserve = true;
     const room = await this.hotelRoomsRepository.findOne({
       relations: { reservations: true },
-      where: { roomsNumber: reserveRoom.roomsNumber },
+      where: { roomNumber: reserveRoom.roomNumber },
     });
     const date = this.reservedDatesRepository.create({
       arrivalDate: reserveRoom.arrivalDate,
@@ -104,7 +104,7 @@ export class ManageRoomsService {
     console.log(query);
     const getByRoomNumber = await this.reservedDatesRepository.find({
       relations: { room: true },
-      where: { room: { roomsNumber: query.roomsNumber } },
+      where: { room: { roomNumber: query.roomNumber } },
     });
     return getByRoomNumber;
   }

@@ -30,17 +30,7 @@ export class ManageRoomsController {
   async createDefaultRooms(
     @Body() createRoomDto: CreateRoomDto,
   ): Promise<HotelRoomType[]> {
-    if (typeof createRoomDto.roomsNumber === 'number') {
-      return this.manageRoomsService.createDefaultRooms(createRoomDto);
-    } else {
-      throw new BadRequestException(
-        'Your should write correct number of creating rooms',
-        {
-          cause: new Error(),
-          description: 'Invalid input format',
-        },
-      );
-    }
+    return this.manageRoomsService.createDefaultRooms(createRoomDto);
   }
 
   @Post('/reserve-room')
@@ -52,7 +42,7 @@ export class ManageRoomsController {
       'days',
     );
 
-    if (difference >= 0 && typeof reserveRoom.roomsNumber === 'number') {
+    if (difference >= 0 && typeof reserveRoom.roomNumber === 'number') {
       return this.manageRoomsService.reserveRoom(reserveRoom);
     } else {
       throw new BadRequestException(

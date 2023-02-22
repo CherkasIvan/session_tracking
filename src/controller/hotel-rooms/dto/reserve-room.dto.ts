@@ -10,7 +10,7 @@ export class ReserveRoomDto {
   })
   @IsNumber()
   @IsPositive()
-  roomsNumber: number;
+  roomNumber: number;
 
   @ApiProperty({
     description: 'Booked start period',
