@@ -110,7 +110,26 @@ export class ManageRoomsService {
   }
 
   async findAllAvailableRooms(query): Promise<HotelRoomType[]> {
-    console.log(query);
-    return null;
+    const rooms = await this.hotelRoomsRepository.find({
+      relations: { reservations: true },
+    });
+    const roomsAvailable: HotelRoomType[] = [];
+    for (const roomNumber of rooms) {
+      roomNumber.reservations.forEach((el) => {
+        if (
+          moment(el.arrivalDate).isBetween(
+            query.arrivalDate,
+            query.departureDate,
+            'days',
+            '[]',
+          )
+        ) {
+          return;
+        } else {
+          roomsAvailable.push(roomNumber);
+        }
+      });
+    }
+    return roomsAvailable;
   }
 }

@@ -70,22 +70,11 @@ export class ManageRoomsController {
   }
 
   // /* Get all hotel rooms */
-
   @Get('/all-available')
   async findAllAvailableRooms(
     @Query() queryDate: CreateDatesDto,
   ): Promise<CreateRoomDto[]> {
     return await this.manageRoomsService.findAllAvailableRooms(queryDate);
   }
-
-  // @Get('/all-available')
-  // // @ApiQuery({ name: 'roomNumber', required: false })
-  // // @ApiQuery({ name: 'searchDates', required: false })
-  // getAllAvailableRooms(): // @Query('roomNumber') roomNumber?: number,
-  // // @Query('searchDates') searchDates?: string,
-  // Promise<HotelRoomsEntity[]> {
-  //   return this.manageRoomsService.getAllAvailableRooms();
-  // }
-
   // /* Get all available hotel rooms */
 }
