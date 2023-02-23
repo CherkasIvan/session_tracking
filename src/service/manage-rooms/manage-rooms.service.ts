@@ -101,7 +101,6 @@ export class ManageRoomsService {
   }
 
   async findDatesForRoomsNumber(query): Promise<AvailableDatesType[]> {
-    console.log(query);
     const getByRoomNumber = await this.reservedDatesRepository.find({
       relations: { room: true },
       where: { room: { roomNumber: query.roomNumber } },
@@ -115,9 +114,22 @@ export class ManageRoomsService {
     });
     const roomsAvailable: HotelRoomType[] = [];
     for (const roomNumber of rooms) {
+      if (!roomNumber.reservations.length) {
+        roomsAvailable.push(roomNumber);
+      }
       roomNumber.reservations.forEach((el) => {
         if (
           moment(el.arrivalDate).isBetween(
+            query.arrivalDate,
+            query.departureDate,
+            'days',
+            '[]',
+          )
+        ) {
+          return;
+        }
+        if (
+          moment(el.departureDate).isBetween(
             query.arrivalDate,
             query.departureDate,
             'days',
