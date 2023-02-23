@@ -115,6 +115,9 @@ export class ManageRoomsService {
     });
     const roomsAvailable: HotelRoomType[] = [];
     for (const roomNumber of rooms) {
+      if (!roomNumber.reservations.length) {
+        roomsAvailable.push(roomNumber);
+      }
       roomNumber.reservations.forEach((el) => {
         if (
           moment(el.arrivalDate).isBetween(
@@ -122,6 +125,14 @@ export class ManageRoomsService {
             query.departureDate,
             'days',
             '[]',
+          )
+        ) {
+          return;
+        }
+        if (
+          moment(el.departureDate).isBetween(
+            query.arrivalDate,
+            query.departureDate,
           )
         ) {
           return;
