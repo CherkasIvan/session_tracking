@@ -15,7 +15,8 @@ import { ReservedDatesEntity } from './model/reserved-dates.entity';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
-        type: config.get('POSTGRES_HOST') as 'postgres',
+        type: 'postgres',
+        host: config.get('POSTGRES_HOST'),
         username: config.get<string>('POSTGRES_USER'),
         password: config.get<string>('POSTGRES_PASSWORD'),
         database: config.get<string>('POSTGRES_DATABASE'),
@@ -23,6 +24,7 @@ import { ReservedDatesEntity } from './model/reserved-dates.entity';
         entities: [HotelRoomsEntity, ReservedDatesEntity],
         autoLoadEntities: true,
         logging: true,
+        synchronize: true,
       }),
     }),
     ManageRoomsControllerModule,
