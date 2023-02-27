@@ -13,12 +13,12 @@ export class ReservedDatesEntity extends BaseEntity {
    * @param room_id Room id string
    */
 
-  @Column()
-  arrivalDate: Date;
+  @Column({ type: 'date' })
+  arrival_date: Date;
 
-  @Column()
-  departureDate: Date;
+  @Column({ type: 'date' })
+  departure_date: Date;
 
-  @ManyToOne((type) => HotelRoomsEntity, (room) => room.reservations)
+  @ManyToOne(() => HotelRoomsEntity, (room) => room.reservations)
   room: HotelRoomsEntity;
 }

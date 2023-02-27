@@ -3,9 +3,8 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Query,
 } from '@nestjs/common';
@@ -21,7 +20,6 @@ import { AvailableDatesType } from '../../interface/available-dates.type';
 
 import * as moment from 'moment';
 import { CreateDatesDto } from './dto/create-dates.dto';
-import { QueryDto } from './dto/query.dto';
 
 @ApiTags('Manage hotel rooms')
 @Controller('hotel-rooms')
@@ -62,9 +60,9 @@ export class ManageRoomsController {
     return await this.manageRoomsService.findAllRooms();
   }
 
-  @Get('/find-all-dates-of-room/:roomNumber')
+  @Get('/find-all-dates-of-room')
   findOneDateByRoomsNumber(
-    @Param() queryNumber: QueryDto,
+    @Param('roomNumber', ParseIntPipe) queryNumber: CreateRoomDto,
   ): Promise<AvailableDatesType[]> {
     return this.manageRoomsService.findDatesForRoomsNumber(queryNumber);
   }
@@ -73,7 +71,8 @@ export class ManageRoomsController {
   @Get('/all-available')
   async findAllAvailableRooms(
     @Query() queryDate: CreateDatesDto,
-  ): Promise<CreateRoomDto[]> {
+  ): Promise<HotelRoomType[]> {
+    console.log(typeof queryDate);
     return await this.manageRoomsService.findAllAvailableRooms(queryDate);
   }
   // /* Get all available hotel rooms */

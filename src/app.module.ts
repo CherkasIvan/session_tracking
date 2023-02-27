@@ -7,6 +7,7 @@ import { ManageRoomsControllerModule } from './controller/hotel-rooms/manage-roo
 
 import { HotelRoomsEntity } from './model/hotel-rooms.entity';
 import { ReservedDatesEntity } from './model/reserved-dates.entity';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ReservedDatesEntity } from './model/reserved-dates.entity';
       }),
     }),
     ManageRoomsControllerModule,
+    SharedModule,
   ],
 })
 export class AppModule {}
