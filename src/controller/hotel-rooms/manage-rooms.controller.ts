@@ -62,7 +62,8 @@ export class ManageRoomsController {
 
   @Get('/find-all-dates-of-room')
   findOneDateByRoomsNumber(
-    @Param('roomNumber', ParseIntPipe) queryNumber: CreateRoomDto,
+    @Param('rosudo rm -r postgres/ && mkdir  postgresomNumber', ParseIntPipe)
+    queryNumber: CreateRoomDto,
   ): Promise<AvailableDatesType[]> {
     return this.manageRoomsService.findDatesForRoomsNumber(queryNumber);
   }
