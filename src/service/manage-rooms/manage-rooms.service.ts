@@ -31,7 +31,7 @@ export class ManageRoomsService {
     const rooms: HotelRoomType[] = [];
     for (let i = 1; i <= createRoomDto.roomNumber; i++) {
       const room: HotelRoomType = {
-        roomNumber: i,
+        room_number: i,
       };
       rooms.push(room);
     }
@@ -44,18 +44,18 @@ export class ManageRoomsService {
     let canReserve = true;
     const room = await this.hotelRoomsRepository.findOne({
       relations: { reservations: true },
-      where: { roomNumber: reserveRoom.roomNumber },
+      where: { room_number: reserveRoom.roomNumber },
     });
     const date = this.reservedDatesRepository.create({
-      arrivalDate: reserveRoom.arrivalDate,
-      departureDate: reserveRoom.departureDate,
+      arrival_date: reserveRoom.arrivalDate,
+      departure_date: reserveRoom.departureDate,
       room,
     });
     for (const reservation of room.reservations) {
       if (
         moment(reserveRoom.arrivalDate).isBetween(
-          reservation.arrivalDate,
-          reservation.departureDate,
+          reservation.arrival_date,
+          reservation.departure_date,
           'days',
           '[]',
         )
@@ -65,8 +65,8 @@ export class ManageRoomsService {
       }
       if (
         moment(reserveRoom.departureDate).isBetween(
-          reservation.arrivalDate,
-          reservation.departureDate,
+          reservation.arrival_date,
+          reservation.departure_date,
           'days',
           '[]',
         )
@@ -94,19 +94,16 @@ export class ManageRoomsService {
   }
 
   async findAllRooms(): Promise<HotelRoomType[]> {
-    const allRooms = await this.hotelRoomsRepository.find({
+    return this.hotelRoomsRepository.find({
       relations: { reservations: true },
     });
-    return allRooms;
   }
 
   async findDatesForRoomsNumber(query): Promise<AvailableDatesType[]> {
-    console.log(query);
-    const getByRoomNumber = await this.reservedDatesRepository.find({
+    return this.reservedDatesRepository.find({
       relations: { room: true },
-      where: { room: { roomNumber: query.roomNumber } },
+      where: { room: { room_number: query.room_number } },
     });
-    return getByRoomNumber;
   }
 
   async findAllAvailableRooms(query): Promise<HotelRoomType[]> {
@@ -114,13 +111,13 @@ export class ManageRoomsService {
       relations: { reservations: true },
     });
     const roomsAvailable: HotelRoomType[] = [];
-    for (const roomNumber of rooms) {
-      if (!roomNumber.reservations.length) {
-        roomsAvailable.push(roomNumber);
+    for (const room_number of rooms) {
+      if (!room_number.reservations.length) {
+        roomsAvailable.push(room_number);
       }
-      roomNumber.reservations.forEach((el) => {
+      room_number.reservations.forEach((el) => {
         if (
-          moment(el.arrivalDate).isBetween(
+          moment(el.arrival_date).isBetween(
             query.arrivalDate,
             query.departureDate,
             'days',
@@ -130,14 +127,14 @@ export class ManageRoomsService {
           return;
         }
         if (
-          moment(el.departureDate).isBetween(
+          moment(el.departure_date).isBetween(
             query.arrivalDate,
             query.departureDate,
           )
         ) {
           return;
         } else {
-          roomsAvailable.push(roomNumber);
+          roomsAvailable.push(room_number);
         }
       });
     }

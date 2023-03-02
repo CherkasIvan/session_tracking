@@ -1,7 +1,7 @@
 import { HotelRoomsEntity } from 'src/model/hotel-rooms.entity';
 
 export type AvailableDatesType = {
-  arrivalDate: Date;
-  departureDate: Date;
+  arrival_date: Date;
+  departure_date: Date;
   room: HotelRoomsEntity;
 };
